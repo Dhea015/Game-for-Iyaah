@@ -3,50 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Let's Play a Game</title>
+    <title>Brick Breaker Love</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+            margin: 0;
+            overflow: hidden;
             background-color: #f9f9f9;
+            text-align: center;
+            font-family: Arial, sans-serif;
         }
-        h1 {
-            color: #333;
+        canvas {
+            display: block;
+            margin: auto;
+            background: #eee;
+            border-bottom: 2px solid #333;
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
+        /* Overlay popup styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
-        .okay {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .no {
-            background-color: #f44336;
-            color: white;
+        .popup {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 300px;
         }
     </style>
 </head>
 <body>
-    <h1>Hi love, let's play a game</h1>
-    <button class="btn okay" onclick="proceed()">Okay</button>
-    <button class="btn no" onclick="showPopup()">No, I don't want</button>
 
-    <script>
-        function proceed() {
-            window.location.href = "game.html";
+<canvas id="gameCanvas" width="480" height="320"></canvas>
+
+<!-- Popup message -->
+<div class="overlay" id="overlay">
+    <div class="popup">
+        <h2>Congratulations Love!</h2>
+        <p>Now screenshot or copy this code:</p>
+        <h3>"Iyaah&lt;3Bleidd"</h3>
+        <p>Send it to Bleidd for your prize.</p>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Ball properties
+    let ballRadius = 8;
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height - 30;
+    let ballDX = 2;
+    let ballDY = -2;
+
+    // Paddle properties
+    let paddleWidth = 60;
+    let paddleHeight = 10;
+    let paddleX = (canvas.width - paddleWidth) / 2;
+    let paddleSpeed = 7;
+    let rightPressed = false;
+    let leftPressed = false;
+
+    // Bricks
+    let brickRowCount = 5;
+    let brickColumnCount = 5;
+    let brickWidth = 75;
+    let brickHeight = 20;
+    let brickPadding = 10;
+    let brickOffsetTop = 30;
+    let brickOffsetLeft = 30;
+    let bricks = [];
+
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+    }
+
+    // Key event listeners
+    document.addEventListener("keydown", keyDownHandler);
+    document.addEventListener("keyup", keyUpHandler);
+
+    function keyDownHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
+        else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
+    }
+
+    function keyUpHandler(e) {
+        if (e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
+        else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
+    }
+
+    function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+        ctx.fillStyle = "#333";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawBricks() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                if (bricks[c][r].status === 1) {
+                    let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+                    let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = "#ff5733";
+                    ctx.fill();
+                    ctx.closePath();
+                }
+            }
+        }
+    }
+
+    function collisionDetection() {
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                let brick = bricks[c][r];
+                if (brick.status === 1) {
+                    if (
+                        ballX > brick.x &&
+                        ballX < brick.x + brickWidth &&
+                        ballY > brick.y &&
+                        ballY < brick.y + brickHeight
+                    ) {
+                        ballDY = -ballDY;
+                        brick.status = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    function checkWin() {
+        let allBricksDestroyed = true;
+        for (let c = 0; c < brickColumnCount; c++) {
+            for (let r = 0; r < brickRowCount; r++) {
+                if (bricks[c][r].status === 1) {
+                    allBricksDestroyed = false;
+                    break;
+                }
+            }
+        }
+        if (allBricksDestroyed) {
+            document.getElementById("overlay").style.display = "flex"; // Show popup
+            cancelAnimationFrame(animation);
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        collisionDetection();
+        checkWin();
+
+        // Ball movement
+        ballX += ballDX;
+        ballY += ballDY;
+
+        // Ball collision with walls
+        if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) ballDX = -ballDX;
+        if (ballY - ballRadius < 0) ballDY = -ballDY;
+
+        // Ball collision with paddle
+        if (
+            ballY + ballRadius > canvas.height - paddleHeight &&
+            ballX > paddleX &&
+            ballX < paddleX + paddleWidth
+        ) {
+            ballDY = -ballDY;
         }
 
-        function showPopup() {
-            alert("Yes you do!");
-            proceed();
+        // Game over if ball falls
+        if (ballY + ballRadius > canvas.height) {
+            document.getElementById("overlay").style.display = "flex"; // Show popup
+            cancelAnimationFrame(animation);
         }
-    </script>
+
+        // Paddle movement
+        if (rightPressed && paddleX < canvas.width - paddleWidth) {
+            paddleX += paddleSpeed;
+        } else if (leftPressed && paddleX > 0) {
+            paddleX -= paddleSpeed;
+        }
+
+        animation = requestAnimationFrame(draw);
+    }
+
+    let animation = requestAnimationFrame(draw);
+</script>
+
 </body>
 </html>
