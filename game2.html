@@ -16,7 +16,6 @@
             display: block;
             margin: auto;
             background: #eee;
-            border-bottom: 2px solid #333;
         }
         /* Overlay popup styles */
         .overlay {
@@ -66,7 +65,7 @@
 <div class="overlay" id="tryAgainOverlay" style="display: none;">
     <div class="popup">
         <h2>Try Again Love</h2>
-        <button onclick="restartGame()">Try Again</button>
+        <button onclick="resetGame()">Try Again</button>
     </div>
 </div>
 
@@ -84,19 +83,18 @@
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
+    let gameStarted = false;
+    let animation;
+
     // Ball properties
     let ballRadius = 8;
-    let ballX = canvas.width / 2;
-    let ballY = canvas.height - 80;
-    let ballDX = 2;
-    let ballDY = -2;
-    let gameStarted = false;
+    let ballSpeed = 2;
+    let ballX, ballY, ballDX, ballDY;
 
     // Paddle properties
     let paddleWidth = 80;
     let paddleHeight = 10;
-    let paddleX = (canvas.width - paddleWidth) / 2;
-    let paddleSpeed = 7;
+    let paddleX;
     let touchStartX = 0;
 
     // Bricks
@@ -109,7 +107,18 @@
     let brickOffsetLeft = 25;
     let bricks = [];
 
-    function createBricks() {
+    function initializeGame() {
+        // Reset ball position
+        ballX = canvas.width / 2;
+        ballY = canvas.height - 80;
+        ballDX = ballSpeed;
+        ballDY = -ballSpeed;
+
+        // Reset paddle position
+        paddleX = (canvas.width - paddleWidth) / 2;
+
+        // Reset bricks
+        bricks = [];
         for (let c = 0; c < brickColumnCount; c++) {
             bricks[c] = [];
             for (let r = 0; r < brickRowCount; r++) {
@@ -117,7 +126,7 @@
             }
         }
     }
-    createBricks();
+    initializeGame();
 
     // Touch event listeners for mobile control
     canvas.addEventListener("touchstart", (e) => {
@@ -129,7 +138,7 @@
         let moveX = touchX - touchStartX;
         paddleX += moveX;
         touchStartX = touchX;
-        
+
         // Prevent paddle from moving out of bounds
         if (paddleX < 0) paddleX = 0;
         if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
@@ -233,11 +242,9 @@
         draw();
     }
 
-    function restartGame() {
+    function resetGame() {
         document.getElementById("tryAgainOverlay").style.display = "none";
-        ballX = canvas.width / 2;
-        ballY = canvas.height - 80;
-        createBricks();
+        initializeGame();
         startGame();
     }
 </script>
