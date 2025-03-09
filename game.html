@@ -3,20 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Started</title>
+    <title>Brick Breaker Love</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
             background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
         }
         h1 {
             color: #333;
         }
+        p {
+            color: #555;
+            font-size: 16px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to the game! ❤️</h1>
+    <div class="container">
+        <h1>Welcome to Brick Breaker Love!</h1>
+        <p>The game is simple: break bricks and save the ball from falling.</p>
+        <p>After completing the game, you'll get a reward! Send a screenshot of your result to Bleidd for your prize.</p>
+        <p>Are you ready?</p>
+        <button class="btn" onclick="startGame()">Ready!</button>
+    </div>
+
+    <script>
+        function startGame() {
+            window.location.href = "game2.html";
+        }
+    </script>
 </body>
 </html>
