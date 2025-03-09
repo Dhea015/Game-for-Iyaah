@@ -9,13 +9,21 @@
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            text-align: center;
+        }
+        img {
+            max-width: 80%; /* Prevents full stretch */
+            width: 300px; /* Default size */
+            height: auto;
+            margin-bottom: 20px; /* Fine spacing */
+            border-radius: 10px; /* Optional: Soft rounded corners */
         }
         .container {
-            text-align: center;
             background: white;
             padding: 30px;
             border-radius: 10px;
@@ -44,6 +52,7 @@
     </style>
 </head>
 <body>
+    <img src="bear.gif" alt="Cute GIF"> <!-- Change 'your-image.gif' to your actual image filename -->
     <div class="container">
         <h1>Hi Love, Let's Play a Game</h1>
         <button class="btn okay" onclick="proceed()">Okay</button>
