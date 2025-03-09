@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Play a Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .okay {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .no {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hi love, let's play a game</h1>
+    <button class="btn okay" onclick="proceed()">Okay</button>
+    <button class="btn no" onclick="showPopup()">No, I don't want</button>
+
+    <script>
+        function proceed() {
+            window.location.href = "game.html";
+        }
+
+        function showPopup() {
+            alert("Yes you do!");
+            proceed();
+        }
+    </script>
+</body>
+</html>
