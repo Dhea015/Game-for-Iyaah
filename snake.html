@@ -5,26 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snake Game - Score: 0</title>
   <style>
-    /* Basic reset and centering */
     body {
       margin: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
       background: #222;
       font-family: sans-serif;
       color: #fff;
     }
-    /* Canvas styling */
     canvas {
       background: #000;
       border: 2px solid #fff;
+      margin-top: 20px;
+    }
+    /* Style for on-screen control buttons */
+    #controls {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-gap: 10px;
+      justify-items: center;
+    }
+    #controls button {
+      padding: 10px;
+      background: #444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+    /* Center the Up button */
+    #up {
+      grid-column: 2;
+    }
+    /* Place the Left, Right, and Down buttons */
+    #left {
+      grid-column: 1;
+    }
+    #right {
+      grid-column: 3;
+    }
+    #down {
+      grid-column: 2;
     }
   </style>
 </head>
 <body>
   <canvas id="game" width="400" height="400"></canvas>
+
+  <!-- On-screen control buttons -->
+  <div id="controls">
+    <button id="up" onclick="snake.changeDirection('Up')">↑</button>
+    <button id="left" onclick="snake.changeDirection('Left')">←</button>
+    <button id="right" onclick="snake.changeDirection('Right')">→</button>
+    <button id="down" onclick="snake.changeDirection('Down')">↓</button>
+  </div>
+
   <script>
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
